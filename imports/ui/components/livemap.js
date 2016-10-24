@@ -25,21 +25,19 @@ class Livemap extends React.Component {
 
     render() {
         var self = this;
-
-        console.log(this.props.data.length);
-        
-        const busIcon = L.icon({ iconUrl: 'images/bus.png', iconSize: [32, 32], });
-        const listMarker = _.map(this._data, function (d, i) {
-            let popupText = _.find(self.props.busData, function (el) { return el.ID == d.ID; });
+        console.log(this.props.parkingMetadata);
+        //https://github.com/moravcik/Leaflet.TextIcon
+        //const busIcon = L.icon({ iconUrl: 'images/bus.png', iconSize: [32, 32], });
+        const listMarker = _.map(this.props.parkingMetadata, function (d, i) {
+            //let popupText = _.find(self.props.busData, function (el) { return el.ID == d.ID; });
             return <Marker key={i}
-                position={[d.lat, d.lon]}
+                position={[d.Latitude, d.Longitude]}
                 clickable='true'
-                icon={busIcon}
-                title={popupText.Title}
+                title={d.Street}
                 draggable='false'
                 >
                 <Popup>
-                    <span>{popupText.Title}</span>
+                    <span>{d.Street}</span>
                 </Popup>
             </Marker>
         });
@@ -57,13 +55,11 @@ class Livemap extends React.Component {
 }
 
 Livemap.propTypes = {
-    clickBusID: React.PropTypes.number.isRequired,
-    busData: React.PropTypes.array.isRequired,
+    parkingMetadata: React.PropTypes.array.isRequired,
     data: React.PropTypes.array.isRequired
 };
 
 Livemap.defaultProps = {
-    clickBusID: defaultID,
     data: defaultData
 }
 
