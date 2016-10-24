@@ -1,0 +1,41 @@
+{
+  "name": "nqm-app-parking",
+  "private": true,
+  "scripts": {
+    "start": "meteor run"
+  },
+  "dependencies": {
+    "babel-preset-stage-1": "^6.16.0",
+    "leaflet": "^1.0.1",
+    "material-ui": "^0.15.4",
+    "meteor-node-stubs": "~0.2.0",
+    "react": "^15.3.2",
+    "react-addons-create-fragment": "^15.3.2",
+    "react-addons-css-transition-group": "^15.3.2",
+    "react-addons-linked-state-mixin": "^15.3.2",
+    "react-addons-perf": "^15.3.2",
+    "react-addons-pure-render-mixin": "^15.3.2",
+    "react-addons-test-utils": "^15.3.2",
+    "react-addons-update": "^15.3.2",
+    "react-dom": "^15.3.2",
+    "react-komposer": "^1.13.1",
+    "react-leaflet": "^1.0.0-rc.1",
+    "react-mounter": "^1.2.0",
+    "react-tap-event-plugin": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.37"
+  },
+  "description": "NQM App Parking",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nqminds/nqm-app-parking.git"
+  },
+  "author": "Alexandru Mereacre",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nqminds/nqm-app-parking/issues"
+  },
+  "homepage": "https://github.com/nqminds/nqm-app-parking#readme"
+}
