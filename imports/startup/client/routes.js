@@ -1,12 +1,7 @@
 import React from "react";
-import {
-  mount
-} from "react-mounter";
-import {
-  FlowRouter
-} from "meteor/kadira:flow-router";
+import { mount } from "react-mounter";
+import { FlowRouter } from "meteor/kadira:flow-router";
 import injectTapEventPlugin from 'react-tap-event-plugin';
-
 import connectionManager from "../../api/manager/connection-manager";
 import Layout from "../../ui/layouts/layout-container";
 import ParkingAppData from "../../ui/pages/parkingapp-data-container";

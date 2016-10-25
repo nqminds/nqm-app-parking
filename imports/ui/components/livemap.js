@@ -1,16 +1,16 @@
 import React from "react";
 import ReactDOM from 'react-dom';
-import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
-
-const defaultID = 1;
-const defaultData = [{ ID: defaultID, timestamp: 0, lat: 52.008778, lon: -0.771088, ele: 170 }];
+import { Map, TileLayer, Marker, Popup, LayerGroup, Circle } from 'react-leaflet';
+import MarkerCluster from "./markercluster"
+ 
+const defaultData = [{ timestamp: 0, lat: 52.008778, lon: -0.771088, ele: 170 }];
 
 class Livemap extends React.Component {
     constructor() {
         super();
 
         this.centerPosition = defaultData[0];
-        this._data = [];//defaultData;
+        this._data = [];
     }
 
     componentWillReceiveProps(nextProps) {
@@ -25,11 +25,11 @@ class Livemap extends React.Component {
 
     render() {
         var self = this;
-        console.log(this.props.parkingMetadata);
-        //https://github.com/moravcik/Leaflet.TextIcon
-        //const busIcon = L.icon({ iconUrl: 'images/bus.png', iconSize: [32, 32], });
-        const listMarker = _.map(this.props.parkingMetadata, function (d, i) {
-            //let popupText = _.find(self.props.busData, function (el) { return el.ID == d.ID; });
+
+        const busIcon = L.icon({ iconUrl: 'images/bus.png', iconSize: [32, 32], });
+
+        /*
+        var listMarker = _.map(this.props.parkingMetadata, function (d, i) {
             return <Marker key={i}
                 position={[d.Latitude, d.Longitude]}
                 clickable='true'
@@ -41,14 +41,15 @@ class Livemap extends React.Component {
                 </Popup>
             </Marker>
         });
+        */
 
         return (
             <Map center={[this.centerPosition.lat, this.centerPosition.lon]} zoom={18}>
                 <TileLayer
                     url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
                     attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                    />
-                {listMarker}
+                />
+                <MarkerCluster parkingMetadata={this.props.parkingMetadata} data={this._data}/>
             </Map>
         );
     }

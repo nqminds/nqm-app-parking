@@ -7,6 +7,7 @@
   "dependencies": {
     "babel-preset-stage-1": "^6.16.0",
     "leaflet": "^1.0.1",
+    "leaflet.markercluster": "^1.0.0",
     "material-ui": "^0.15.4",
     "meteor-node-stubs": "~0.2.0",
     "react": "^15.3.2",

@@ -6,6 +6,9 @@ import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColu
 
 import LivemapContainer from "./livemap-container"
 
+require('leaflet');
+require('leaflet.markercluster');
+
 const styles = {
   root: {
     display: 'flex',
