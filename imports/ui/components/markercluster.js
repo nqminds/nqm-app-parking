@@ -13,7 +13,11 @@ class MarkerCluster extends MapLayer {
 
     componentWillReceiveProps(nextProps) {
         var markers = [];
-
+        //https://github.com/Leaflet/Leaflet.markercluster
+        //https://github.com/troutowicz/geoshare/blob/7f0c45d433a0d52d78e02da9a12b0d2156fcbedc/test/app/components/MarkerCluster.jsx
+        //view-source:http://leaflet.github.io/Leaflet.markercluster/example/marker-clustering-realworld.388.html
+        //https://github.com/Leaflet/Leaflet.markercluster#usage
+        
         if (!this.parkingMetadata.length && nextProps.parkingMetadata.length) {
             
             console.log(nextProps.parkingMetadata);
