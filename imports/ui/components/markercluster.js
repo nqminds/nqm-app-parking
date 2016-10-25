@@ -2,25 +2,31 @@ import React from 'react';
 import { MapLayer } from 'react-leaflet';
 
 class MarkerCluster extends MapLayer {
+    constructor() {
+        super();
+        this.parkingMetadata = [];
+    }
+
     componentWillMount() {
-        this.leafletElement = L.markerClusterGroup({
-            spiderfyOnMaxZoom: false,
-            showCoverageOnHover: false,
-            zoomToBoundsOnClick: false
-        });
+        this.leafletElement = L.markerClusterGroup();
     }
 
     componentWillReceiveProps(nextProps) {
         var markers = [];
 
-        console.log(nextProps.parkingMetadata);
-        _.forEach(nextProps.parkingMetadata, (val)=>{
-            var marker = L.marker(new L.LatLng(val.Latitude, val.Longitude), { title: "1" })
-            markers.push(marker);
-        });
+        if (!this.parkingMetadata.length && nextProps.parkingMetadata.length) {
+            
+            console.log(nextProps.parkingMetadata);
+            this.parkingMetadata = nextProps.parkingMetadata;
 
-        if (markers.length>0)
+            _.forEach(nextProps.parkingMetadata, (val)=>{
+                var marker = L.marker(new L.LatLng(val.Latitude, val.Longitude), { title: val.Street });
+                marker.bindPopup(val.Street);
+                markers.push(marker);
+            });
+
             this.leafletElement.addLayers(markers);
+        }
     }
 
     shouldComponentUpdate() {
