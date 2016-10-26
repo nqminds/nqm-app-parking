@@ -24,13 +24,16 @@ class ParkingApp extends React.Component {
 
   render() {
     var self = this;
-    
+    //var mongodbFilter = {ID: {$eq: 21}};
+    var mongodbOptions = { sort: { ID: -1 }};
+
     return (
       <div className="flex-container-row">
         <div className="flex-item-2-row">
           <div className="leaflet-container">
               <LivemapContainer
                 resourceId={Meteor.settings.public.parkingTableLatest}
+                options={mongodbOptions}
                 parkingMetadata={self.props.data}
               />
         </div>

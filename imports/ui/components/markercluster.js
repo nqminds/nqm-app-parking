@@ -14,7 +14,7 @@ class MarkerCluster extends MapLayer {
         var markers = [];
 
         this.leafletElement = L.markerClusterGroup();
-
+        
         if (!this._parkingMetadata.length && this.props.parkingMetadata.length) {
             
             this._parkingMetadata = this.props.parkingMetadata.slice(0);
@@ -23,15 +23,16 @@ class MarkerCluster extends MapLayer {
                 var marker = L.marker(new L.LatLng(val.Latitude, val.Longitude), {
                     title: val.Street,
                     icon: new L.TextIcon({
-                        text: '12',
-                        color: 'red'
+                        text: val.BayCount,
+                        color: 'red',
+                        id: Number(val.LotCode)
                     })
                 });
                 marker.bindPopup(
                     "<b>Street name: </b>"+val.Street+"<br>"+
                     "<b>Bay type: </b>"+val.BayType+"<br>"+
                     "<b>Tarrif code:</b>"+val.TariffCode+"<br>"+
-                    "<b>Bay count:</b>"+val.BayCount);
+                    "<b>Bay count:</b>"+val.BayCount).on('click', (e) => console.log(e.target.options.icon.options.id));
                 markers.push(marker);
             });
 
@@ -40,6 +41,7 @@ class MarkerCluster extends MapLayer {
     }
 
     componentWillReceiveProps(nextProps) {
+        console.log(nextProps.data);
     }
 
     shouldComponentUpdate() {

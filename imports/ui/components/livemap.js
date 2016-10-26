@@ -59,7 +59,7 @@ class Livemap extends React.Component {
                     url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
                     attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                 />
-                <MarkerCluster parkingMetadata={self.props.parkingMetadata} data={self._data}/>
+                <MarkerCluster parkingMetadata={self.props.parkingMetadata} data={self.props.data}/>
             </Map>
         );
     }
