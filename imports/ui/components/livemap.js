@@ -3,48 +3,39 @@ import ReactDOM from 'react-dom';
 import { Map, TileLayer, Marker, Popup, LayerGroup, Circle } from 'react-leaflet';
 import MarkerCluster from "./markercluster"
  
-const defaultData = [{ timestamp: 0, lat: 52.008778, lon: -0.771088, ele: 170 }];
+const defaultData = [{ lat: 52.008778, lon: -0.771088}];
 
 class Livemap extends React.Component {
     constructor() {
         super();
 
-        this.centerPosition = defaultData[0];
+        this.centerPosition = L.latLng(defaultData[0], defaultData[1]);
+        this.maxBounds = null;
         this._data = [];
     }
 
-    componentWillReceiveProps(nextProps) {
-        let position = _.find(nextProps.data, function (el) { return el.ID == nextProps.clickBusID });
-
-        if (position !== undefined)
-            this.centerPosition = position;
-
-        if (nextProps.data.length)
-            this._data = nextProps.data.slice(0);
+    componentWillMount() {
+        console.log("Props:"+this.props.parkingMetadata);
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.parkingMetadata.length) {
+            this.maxBounds = L.latLngBounds(_.map(nextProps.parkingMetadata, (val)=>{return new L.LatLng(val.Latitude, val.Longitude);}));
+            this.centerPosition = this.maxBounds.getCenter();
+        }
+    }
+    
     render() {
         var self = this;
 
-        const busIcon = L.icon({ iconUrl: 'images/bus.png', iconSize: [32, 32], });
-
-        /*
-        var listMarker = _.map(this.props.parkingMetadata, function (d, i) {
-            return <Marker key={i}
-                position={[d.Latitude, d.Longitude]}
-                clickable='true'
-                title={d.Street}
-                draggable='false'
-                >
-                <Popup>
-                    <span>{d.Street}</span>
-                </Popup>
-            </Marker>
-        });
-        */
-
         return (
-            <Map center={[this.centerPosition.lat, this.centerPosition.lon]} zoom={18}>
+            <Map
+                center={this.centerPosition}
+                zoom={18}
+                scrollWheelZoom="false"
+                touchZoom="center"
+                maxBounds={this.maxBounds}
+            >
                 <TileLayer
                     url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
                     attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
