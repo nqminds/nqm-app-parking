@@ -8,6 +8,7 @@ class MarkerCluster extends MapLayer {
         super(props);
 
         this._parkingMetadata = [];
+        this._markers = {};
     }
 
     componentWillMount() {
@@ -20,20 +21,21 @@ class MarkerCluster extends MapLayer {
             this._parkingMetadata = this.props.parkingMetadata.slice(0);
 
             _.forEach(this._parkingMetadata, (val) => {
-                var marker = L.marker(new L.LatLng(val.Latitude, val.Longitude), {
+
+                this._markers[Number(val.LotCode)] = L.marker(new L.LatLng(val.Latitude, val.Longitude), {
                     title: val.Street,
                     icon: new L.TextIcon({
                         text: val.BayCount,
-                        color: 'red',
+                        color: 'blue',
                         id: Number(val.LotCode)
                     })
                 });
-                marker.bindPopup(
+                this._markers[Number(val.LotCode)].bindPopup(
                     "<b>Street name: </b>"+val.Street+"<br>"+
                     "<b>Bay type: </b>"+val.BayType+"<br>"+
                     "<b>Tarrif code:</b>"+val.TariffCode+"<br>"+
                     "<b>Bay count:</b>"+val.BayCount).on('click', (e) => console.log(e.target.options.icon.options.id));
-                markers.push(marker);
+                markers.push(this._markers[Number(val.LotCode)]);
             });
 
             this.leafletElement.addLayers(markers);
@@ -41,7 +43,11 @@ class MarkerCluster extends MapLayer {
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log(nextProps.data);
+        _.forEach(nextProps.data, (val)=>{
+            let color = Number(val.currentvalue)?'blue':'red';
+            this._markers[Number(val.ID)].options.icon.options.color = color;
+            this._markers[Number(val.ID)].options.icon.options.text = '0';//val.currentvalue;    
+        });
     }
 
     shouldComponentUpdate() {
