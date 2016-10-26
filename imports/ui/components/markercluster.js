@@ -19,9 +19,19 @@ class MarkerCluster extends MapLayer {
             
             this._parkingMetadata = this.props.parkingMetadata.slice(0);
 
-            _.forEach(this._parkingMetadata, (val)=>{
-                var marker = L.marker(new L.LatLng(val.Latitude, val.Longitude), { title: val.Street, icon: new L.TextIcon({ text: '12', color: 'red' })});
-                marker.bindPopup(val.Street);
+            _.forEach(this._parkingMetadata, (val) => {
+                var marker = L.marker(new L.LatLng(val.Latitude, val.Longitude), {
+                    title: val.Street,
+                    icon: new L.TextIcon({
+                        text: '12',
+                        color: 'red'
+                    })
+                });
+                marker.bindPopup(
+                    "<b>Street name: </b>"+val.Street+"<br>"+
+                    "<b>Bay type: </b>"+val.BayType+"<br>"+
+                    "<b>Tarrif code:</b>"+val.TariffCode+"<br>"+
+                    "<b>Bay count:</b>"+val.BayCount);
                 markers.push(marker);
             });
 
