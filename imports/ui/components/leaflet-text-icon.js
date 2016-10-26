@@ -3,15 +3,17 @@
 		options: L.extend({
 			className: 'leaflet-div-icon',
 			getIconUrl: function(color) {
-				//if (L.Browser.retina) - use 2x version
 				return '/images/marker-hole-'+ (color || 'blue') +'.svg' 
-			}
+			},
+			shadowUrl:""
 		}, new L.Icon.Default().options),
 
 	 	initialize: function(options) {
+			
 	 		L.extend(options, {
-	 			shadowUrl: L.Icon.Default.imagePath + '/marker-shadow.png'
+	 			shadowUrl: '/images/marker-shadow.png'
 	 		});
+			
 	 		L.setOptions(this, options);
 	 		var iconUrl = this.options.getIconUrl(this.options.color);
 	 		this._iconImg = this._createImg(iconUrl);
@@ -35,6 +37,5 @@
 		setText: function(text) {
 			this._textDiv.innerHTML = text || '';
 		}
-	});
-
+	});	
 }());

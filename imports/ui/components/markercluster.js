@@ -1,6 +1,8 @@
 import React from 'react';
 import { MapLayer } from 'react-leaflet';
 
+require('./leaflet-text-icon.js');
+
 class MarkerCluster extends MapLayer {
     constructor(props) {
         super(props);
@@ -18,7 +20,7 @@ class MarkerCluster extends MapLayer {
             this._parkingMetadata = this.props.parkingMetadata.slice(0);
 
             _.forEach(this._parkingMetadata, (val)=>{
-                var marker = L.marker(new L.LatLng(val.Latitude, val.Longitude), { title: val.Street });
+                var marker = L.marker(new L.LatLng(val.Latitude, val.Longitude), { title: val.Street, icon: new L.TextIcon({ text: '12', color: 'red' })});
                 marker.bindPopup(val.Street);
                 markers.push(marker);
             });

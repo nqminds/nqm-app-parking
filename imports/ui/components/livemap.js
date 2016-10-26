@@ -30,62 +30,30 @@ class Livemap extends React.Component {
             return new L.LatLng(val.Latitude, val.Longitude);
         }));
 
-
         this.setState({
             centerPosition: bounds.getCenter(),
             maxBounds: bounds
         });
-        console.log(this.state.maxBounds);
     }
 
     componentWillMount() {
-        if (this.props.parkingMetadata.length) {
-            let bounds = L.latLngBounds(_.map(this.props.parkingMetadata, (val) => {
-                return new L.LatLng(val.Latitude, val.Longitude);
-            }));
-
-
-            this.setState({
-                centerPosition: bounds.getCenter(),
-                maxBounds: bounds
-            });
-            //this._setMapBounds(this.props.parkingMetadata);
-        }
+        if (this.props.parkingMetadata.length)
+            this._setMapBounds(this.props.parkingMetadata);
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.parkingMetadata.length && this.maxBounds==null) {
-            //this._setMapBounds.bind(this, nextProps.parkingMetadata);
-            
-            let bounds = L.latLngBounds(_.map(nextProps.parkingMetadata, (val) => {
-                return new L.LatLng(val.Latitude, val.Longitude);
-            }));
-
-
-            this.setState({
-                centerPosition: bounds.getCenter(),
-                maxBounds: bounds
-            });
-            
-        }
     }
     
     render() {
         var self = this;
 
-            let bounds = L.latLngBounds(_.map(this.props.parkingMetadata, (val) => {
-                return new L.LatLng(val.Latitude, val.Longitude);
-            }));
-
-        console.log("LiveMap");
-
         return (
             <Map
-                center={bounds.getCenter()}
+                center={self.state.maxBounds.getCenter()}
                 zoom={18}
                 scrollWheelZoom="false"
                 touchZoom="center"
-                maxBounds={bounds}
+                maxBounds={self.state.maxBounds}
             >
                 <TileLayer
                     url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'

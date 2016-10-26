@@ -7,7 +7,7 @@
 .leaflet-marker-icon .icon-text {
 	position: relative;
 	top: -42px;
-	font-size: 20px;
+	font-size: 12px;
 	width: 25px;
-	text-align: right;
+	text-align: center;
 }
