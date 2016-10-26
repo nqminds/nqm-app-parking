@@ -1,3 +1,10 @@
+/*
+https://github.com/Leaflet/Leaflet.markercluster
+https://github.com/troutowicz/geoshare/blob/7f0c45d433a0d52d78e02da9a12b0d2156fcbedc/test/app/components/MarkerCluster.jsx
+http://leaflet.github.io/Leaflet.markercluster/example/marker-clustering-realworld.388.html
+https://github.com/Leaflet/Leaflet.markercluster#usage
+*/
+
 import React from "react";
 import ReactDOM from 'react-dom';
 import { Map, TileLayer, Marker, Popup, LayerGroup, Circle } from 'react-leaflet';
@@ -6,41 +13,85 @@ import MarkerCluster from "./markercluster"
 const defaultData = [{ lat: 52.008778, lon: -0.771088}];
 
 class Livemap extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
 
-        this.centerPosition = L.latLng(defaultData[0], defaultData[1]);
-        this.maxBounds = null;
+        this.state = {
+            centerPosition: L.latLng(defaultData[0], defaultData[1]),
+            maxBounds: null
+        };
+
         this._data = [];
+        this._setMapBounds = this._setMapBounds.bind(this);
+    }
+
+    _setMapBounds(parkingMetadata) {
+        let bounds = L.latLngBounds(_.map(parkingMetadata, (val) => {
+            return new L.LatLng(val.Latitude, val.Longitude);
+        }));
+
+
+        this.setState({
+            centerPosition: bounds.getCenter(),
+            maxBounds: bounds
+        });
+        console.log(this.state.maxBounds);
     }
 
     componentWillMount() {
-        console.log("Props:"+this.props.parkingMetadata);
+        if (this.props.parkingMetadata.length) {
+            let bounds = L.latLngBounds(_.map(this.props.parkingMetadata, (val) => {
+                return new L.LatLng(val.Latitude, val.Longitude);
+            }));
+
+
+            this.setState({
+                centerPosition: bounds.getCenter(),
+                maxBounds: bounds
+            });
+            //this._setMapBounds(this.props.parkingMetadata);
+        }
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.parkingMetadata.length) {
-            this.maxBounds = L.latLngBounds(_.map(nextProps.parkingMetadata, (val)=>{return new L.LatLng(val.Latitude, val.Longitude);}));
-            this.centerPosition = this.maxBounds.getCenter();
+        if (nextProps.parkingMetadata.length && this.maxBounds==null) {
+            //this._setMapBounds.bind(this, nextProps.parkingMetadata);
+            
+            let bounds = L.latLngBounds(_.map(nextProps.parkingMetadata, (val) => {
+                return new L.LatLng(val.Latitude, val.Longitude);
+            }));
+
+
+            this.setState({
+                centerPosition: bounds.getCenter(),
+                maxBounds: bounds
+            });
+            
         }
     }
     
     render() {
         var self = this;
 
+            let bounds = L.latLngBounds(_.map(this.props.parkingMetadata, (val) => {
+                return new L.LatLng(val.Latitude, val.Longitude);
+            }));
+
+        console.log("LiveMap");
+
         return (
             <Map
-                center={this.centerPosition}
+                center={bounds.getCenter()}
                 zoom={18}
                 scrollWheelZoom="false"
                 touchZoom="center"
-                maxBounds={this.maxBounds}
+                maxBounds={bounds}
             >
                 <TileLayer
                     url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
                     attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                 />
-                <MarkerCluster parkingMetadata={this.props.parkingMetadata} data={this._data}/>
+                <MarkerCluster parkingMetadata={self.props.parkingMetadata} data={self._data}/>
             </Map>
         );
     }
