@@ -8,12 +8,12 @@ class MarkerCluster extends MapLayer {
         super(props);
 
         this._parkingMetadata = [];
-        this._markers = {};
+        this._markers = {};    
     }
 
     componentWillMount() {
         var markers = [];
-
+        var self = this;
         this.leafletElement = L.markerClusterGroup();
         
         if (!this._parkingMetadata.length && this.props.parkingMetadata.length) {
@@ -35,7 +35,7 @@ class MarkerCluster extends MapLayer {
                     "<b>Street name: </b>"+val.Street+"<br>"+
                     "<b>Bay type: </b>"+val.BayType+"<br>"+
                     "<b>Tarrif code:</b>"+val.TariffCode+"<br>"+
-                    "<b>Bay count:</b>"+val.BayCount).on('click', (e) => console.log(e.target.options.icon.options.id));
+                    "<b>Bay count:</b>"+val.BayCount).on('click', (e) => {self.props.onClickMarker(e.target.options.icon.options.id)});
                 markers.push(this._markers[Number(val.LotCode)]);
             });
 
@@ -63,7 +63,8 @@ class MarkerCluster extends MapLayer {
 
 MarkerCluster.propTypes = {
     parkingMetadata: React.PropTypes.array.isRequired,
-    data: React.PropTypes.array.isRequired
+    data: React.PropTypes.array.isRequired,
+    onClickMarker: React.PropTypes.func.isRequired
 };
 
 export default MarkerCluster;

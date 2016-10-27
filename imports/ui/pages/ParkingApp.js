@@ -22,6 +22,10 @@ class ParkingApp extends React.Component {
 
   }
 
+  _onClickMarker(id) {
+    console.log(id);
+  }
+
   render() {
     var self = this;
     //var mongodbFilter = {ID: {$eq: 21}};
@@ -35,6 +39,7 @@ class ParkingApp extends React.Component {
                 resourceId={Meteor.settings.public.parkingTableLatest}
                 options={mongodbOptions}
                 parkingMetadata={self.props.data}
+                onClickMarker={self._onClickMarker.bind(this)}
               />
         </div>
         </div>

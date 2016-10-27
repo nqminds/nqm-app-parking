@@ -59,7 +59,11 @@ class Livemap extends React.Component {
                     url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
                     attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                 />
-                <MarkerCluster parkingMetadata={self.props.parkingMetadata} data={self.props.data}/>
+                <MarkerCluster
+                    parkingMetadata={self.props.parkingMetadata}
+                    data={self.props.data}
+                    onClickMarker={self.props.onClickMarker}
+                />
             </Map>
         );
     }
@@ -67,7 +71,8 @@ class Livemap extends React.Component {
 
 Livemap.propTypes = {
     parkingMetadata: React.PropTypes.array.isRequired,
-    data: React.PropTypes.array.isRequired
+    data: React.PropTypes.array.isRequired,
+    onClickMarker: React.PropTypes.func.isRequired
 };
 
 Livemap.defaultProps = {
