@@ -3,12 +3,11 @@ import ReactDOM from 'react-dom';
 import {Meteor} from "meteor/meteor";
 import Paper from 'material-ui/Paper';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
+import 'leaflet';
+import 'leaflet.markercluster';
 
 import LivemapContainer from "./livemap-container"
-
-require('leaflet');
-require('leaflet.markercluster');
-
+import Chart from "../components/chart"
 const styles = {
   root: {
     display: 'flex',
@@ -41,7 +40,12 @@ class ParkingApp extends React.Component {
                 parkingMetadata={self.props.data}
                 onClickMarker={self._onClickMarker.bind(this)}
               />
+          </div>
         </div>
+        <div className="flex-item-1-row">
+          <Paper zDepth={1}>
+            <Chart/>
+          </Paper>
         </div>
       </div>  
     );

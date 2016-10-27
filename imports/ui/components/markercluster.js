@@ -1,7 +1,6 @@
 import React from 'react';
 import { MapLayer } from 'react-leaflet';
-
-require('./leaflet-text-icon.js');
+import './leaflet-text-icon.js';
 
 class MarkerCluster extends MapLayer {
     constructor(props) {
@@ -59,7 +58,6 @@ class MarkerCluster extends MapLayer {
         return null;
     }
 }
-
 
 MarkerCluster.propTypes = {
     parkingMetadata: React.PropTypes.array.isRequired,
