@@ -40,14 +40,15 @@
     flex-wrap: wrap;
     justify-content: center;
     align-content: flex-start;
-    align-items: flex-start;
+    align-items: stretch;
 }
 
 .flex-item-1-row {
+	width: 300px;
 	height: 250px;
     flex-grow: 1;
     flex-shrink: 0;
-    flex-basis: 250px;
+    flex-basis: 200px;
 }
 
 .flex-item-2-row {
@@ -59,6 +60,19 @@
     margin:5px;
 }
 
+.flex-item-1-column {
+    flex-grow: 1;
+    flex-shrink: 0;
+    flex-basis: 200px;
+}
+
+.flex-item-2-column {
+	width: 300px;
+	height: 250px;
+    flex-grow: 1;
+    flex-shrink: 0;
+    flex-basis: 200px;
+}
 .leaflet-container {
     min-height: 800px;
     width: 100%;
@@ -75,22 +89,6 @@
   fill: none;
   stroke: steelblue;
   stroke-width: 1.5px;
-}
-
-.svg-container {
-    display: inline-block;
-    position: relative;
-    width: 100%;
-    padding-bottom: 100%;
-    vertical-align: center;
-    overflow: hidden;
-}
-
-.svg-content {
-    display: inline-block;
-    position: absolute;
-    top: 0;
-    left: 0;
 }
 
 .muidocs-icon-communication-phone:before {

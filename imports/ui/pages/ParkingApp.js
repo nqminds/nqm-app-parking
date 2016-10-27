@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from 'react-dom';
 import {Meteor} from "meteor/meteor";
 import Paper from 'material-ui/Paper';
+import Slider from 'material-ui/Slider';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 import 'leaflet';
 import 'leaflet.markercluster';
@@ -43,10 +44,17 @@ class ParkingApp extends React.Component {
           </div>
         </div>
         <div className="flex-item-1-row">
-          <Paper zDepth={1}>
-            <Chart/>
-          </Paper>
-        </div>
+          <div className="flex-container-column">
+              <div className="flex-item-1-column">
+                <Paper zDepth={1}>
+                  <Chart/>
+                </Paper>
+              </div>
+              <div className="flex-item-1-column">
+                <Slider defaultValue={0.5}/>
+              </div>
+          </div>
+        </div>    
       </div>  
     );
   }
