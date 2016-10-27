@@ -17,18 +17,18 @@
 	 		L.setOptions(this, options);
 	 		var iconUrl = this.options.getIconUrl(this.options.color);
 	 		this._iconImg = this._createImg(iconUrl);
+
+			this._textDiv = document.createElement('div');
+			this._textDiv.className = 'icon-text';
+			this._textDiv.innerHTML = this.options.text || '';
 	 	},
 		createIcon: function() {
-			var textDiv = document.createElement('div');
-			textDiv.className = 'icon-text';
-			textDiv.innerHTML = this.options.text || '';
-
+			
 			var div = document.createElement('div');
 			div.appendChild(this._iconImg);
-			div.appendChild(textDiv);
+			div.appendChild(this._textDiv);
 
 			this._setIconStyles(div, 'icon');
-			this._textDiv = textDiv;
 			return div;
 		},
 		setColor: function(color) {

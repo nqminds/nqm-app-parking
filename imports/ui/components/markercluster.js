@@ -25,11 +25,12 @@ class MarkerCluster extends MapLayer {
                 this._markers[Number(val.LotCode)] = L.marker(new L.LatLng(val.Latitude, val.Longitude), {
                     title: val.Street,
                     icon: new L.TextIcon({
-                        text: val.BayCount,
+                        text: val.BayCount.toString(),
                         color: 'blue',
                         id: Number(val.LotCode)
                     })
                 });
+                
                 this._markers[Number(val.LotCode)].bindPopup(
                     "<b>Street name: </b>"+val.Street+"<br>"+
                     "<b>Bay type: </b>"+val.BayType+"<br>"+
@@ -45,8 +46,8 @@ class MarkerCluster extends MapLayer {
     componentWillReceiveProps(nextProps) {
         _.forEach(nextProps.data, (val)=>{
             let color = Number(val.currentvalue)?'blue':'red';
-            this._markers[Number(val.ID)].options.icon.options.color = color;
-            this._markers[Number(val.ID)].options.icon.options.text = '0';//val.currentvalue;    
+            this._markers[Number(val.ID)].options.icon.setColor(color);
+            this._markers[Number(val.ID)].options.icon.setText(val.currentvalue.toString());    
         });
     }
 
