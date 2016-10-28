@@ -44,8 +44,10 @@ class ParkingApp extends React.Component {
       snackBarMessage:"",
       snackBarOpen: false,
       smsToggleState: false,
+      feedToggleState: false,
       cardExpanded: false,
-      filterDate: null,
+      filterDate: new Date(),
+      analysisType: "Time series analysis"
     };
   }
 
@@ -59,7 +61,6 @@ class ParkingApp extends React.Component {
   }
 
   handleFilterDate(event, date) {
-    console.log(date);
     this.setState({
       filterDate: date
     });
@@ -77,6 +78,18 @@ class ParkingApp extends React.Component {
       }
   }
 
+  handleFeedSubscribeToggle() {
+      if(this.state.feedToggleState) {
+        this.setState({
+          feedToggleState: false
+        });
+      } else {
+        this.setState({
+          feedToggleState: true
+        });
+      }
+  }
+
   handleSnackbarClose() {
     this.setState({
       snackBarOpen: false
@@ -84,7 +97,23 @@ class ParkingApp extends React.Component {
   };
 
   handleExpandChange(expanded) {
-    this.setState({cardExpanded: expanded});
+    this.setState({
+      cardExpanded: expanded
+    });
+  }
+
+  handleTimeseriesClick() {
+    this.setState({
+      cardExpanded: true,
+      analysisType: "Time series analysis"
+    });
+  }
+
+  handleDistributionClick() {
+    this.setState({
+      cardExpanded: true,
+      analysisType: "Distribution analysis"
+    });
   }
 
   componentWillMount() {
@@ -125,6 +154,12 @@ class ParkingApp extends React.Component {
             />
             <CardText>
               <Toggle
+                toggled={this.state.feedToggleState}
+                labelPosition="right"
+                onToggle={this.handleFeedSubscribeToggle.bind(this)}
+                label="Subscribe to live feed."
+              />            
+              <Toggle
                 toggled={this.state.smsToggleState}
                 labelPosition="right"
                 onToggle={this.handleSmsSubscribeToggle.bind(this)}
@@ -135,7 +170,7 @@ class ParkingApp extends React.Component {
               expandable={true}
             >
             </CardMedia>
-            <CardTitle subtitle="Card subtitle" expandable={true} />
+            <CardTitle subtitle={this.state.analysisType} expandable={true} />
             <CardText expandable={true}>
               <Chart/>
               <DatePicker
@@ -151,12 +186,14 @@ class ParkingApp extends React.Component {
                 primary={true}
                 style={buttonstyle}
                 icon={<FontIcon className="material-icons">show_chart</FontIcon>}
+                onTouchTap={this.handleTimeseriesClick.bind(this)}
               />
               <RaisedButton
                 label="Distribution"
                 primary={true}
                 style={buttonstyle}
                 icon={<FontIcon className="material-icons">equalizer</FontIcon>}
+                onTouchTap={this.handleDistributionClick.bind(this)}
               />
             </CardActions>
           </Card>
