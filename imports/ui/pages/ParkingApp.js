@@ -10,8 +10,10 @@ import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColu
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import Toggle from 'material-ui/Toggle';
 import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
 import Avatar from 'material-ui/Avatar';
 import FontIcon from "material-ui/FontIcon";
+import DatePicker from 'material-ui/DatePicker';
 import {
   blue900,
   blue100
@@ -31,6 +33,7 @@ const styles = {
 };
 
 const iconstyle = {margin: 5};
+const buttonstyle = {margin:12};
 
 class ParkingApp extends React.Component {
   constructor(props) {
@@ -40,7 +43,9 @@ class ParkingApp extends React.Component {
       currentMarker:null,
       snackBarMessage:"",
       snackBarOpen: false,
-      smsToggleState: false
+      smsToggleState: false,
+      cardExpanded: false,
+      filterDate: null,
     };
   }
 
@@ -51,6 +56,13 @@ class ParkingApp extends React.Component {
         currentMarker:el
       });
     }  
+  }
+
+  handleFilterDate(event, date) {
+    console.log(date);
+    this.setState({
+      filterDate: date
+    });
   }
 
   handleSmsSubscribeToggle() {
@@ -70,6 +82,10 @@ class ParkingApp extends React.Component {
       snackBarOpen: false
     });
   };
+
+  handleExpandChange(expanded) {
+    this.setState({cardExpanded: expanded});
+  }
 
   componentWillMount() {
     if (this.props.data.length) {
@@ -94,7 +110,7 @@ class ParkingApp extends React.Component {
     if (this.state.currentMarker!=null) {
       optionsRow = (
         <div className="flex-item-1-row">
-          <Card expanded={false}>
+          <Card expanded={this.state.cardExpanded} onExpandChange={this.handleExpandChange.bind(this)}>
             <CardHeader
               title={this.state.currentMarker.Street}
               subtitle={this.state.currentMarker.BayType}
@@ -112,25 +128,36 @@ class ParkingApp extends React.Component {
                 toggled={this.state.smsToggleState}
                 labelPosition="right"
                 onToggle={this.handleSmsSubscribeToggle.bind(this)}
-                label="Subscribe to text messages updates."
+                label="Subscribe to text message updates."
               />
             </CardText>
             <CardMedia
               expandable={true}
-              overlay={<CardTitle title="Overlay title" subtitle="Overlay subtitle" />}
             >
-              <img src="images/nature-600-337.jpg" />
             </CardMedia>
-            <CardTitle title="Card title" subtitle="Card subtitle" expandable={true} />
+            <CardTitle subtitle="Card subtitle" expandable={true} />
             <CardText expandable={true}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
-              Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
-              Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
+              <Chart/>
+              <DatePicker
+                autoOk={true}
+                floatingLabelText="Filter date"
+                value={this.state.filterDate}
+                onChange={this.handleFilterDate.bind(this)}
+              />
             </CardText>
             <CardActions>
-              <FlatButton label="Expand"/>
-              <FlatButton label="Reduce"/>
+              <RaisedButton
+                label="Timeseries"
+                primary={true}
+                style={buttonstyle}
+                icon={<FontIcon className="material-icons">show_chart</FontIcon>}
+              />
+              <RaisedButton
+                label="Distribution"
+                primary={true}
+                style={buttonstyle}
+                icon={<FontIcon className="material-icons">equalizer</FontIcon>}
+              />
             </CardActions>
           </Card>
         </div>);
