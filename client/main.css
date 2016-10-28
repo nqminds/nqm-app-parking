@@ -44,16 +44,13 @@
 }
 
 .flex-item-1-row {
-	width: 300px;
-	height: 250px;
-    flex-grow: 1;
-    flex-shrink: 0;
-    flex-basis: 200px;
+	width: 400px;
+    height: 250px;
 }
 
 .flex-item-2-row {
-    width: 300px;
-    min-height: 250px;
+    width: 500px;
+    min-height: 350px;
     flex-grow: 1;
     flex-shrink: 0;
     flex-basis: 200px;
@@ -64,6 +61,7 @@
     flex-grow: 1;
     flex-shrink: 0;
     flex-basis: 200px;
+    margin:5px;
 }
 
 .flex-item-2-column {
@@ -137,4 +135,8 @@
 
 .muidocs-icon-custom-pie:before {
 	content: "\e610";
+}
+
+.muidocs-icon-local-parking:before {
+	content: "\e54F";
 }
