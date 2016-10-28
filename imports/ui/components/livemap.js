@@ -51,9 +51,10 @@ class Livemap extends React.Component {
             <Map
                 center={self.state.maxBounds.getCenter()}
                 zoom={18}
-                scrollWheelZoom="false"
-                touchZoom="center"
+                scrollWheelZoom={false}
+                touchZoom={false}
                 maxBounds={null}
+                dragging={true}
             >
                 <TileLayer
                     url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
