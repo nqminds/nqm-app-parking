@@ -7,6 +7,7 @@ class Chart extends React.Component {
     }
 
     componentDidMount() {
+        //console.log(this.props.data);
         var svg = d3.select("#parkchart");
         var margin = {
                 top: 20,
@@ -78,5 +79,9 @@ class Chart extends React.Component {
                     preserveAspectRatio = "xMidYMid meet"/> ;
     }
 }
+
+Chart.propTypes = {
+    data: React.PropTypes.array.isRequired
+};
 
 export default Chart;

@@ -14,17 +14,14 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Avatar from 'material-ui/Avatar';
 import FontIcon from "material-ui/FontIcon";
 import DatePicker from 'material-ui/DatePicker';
-import {
-  blue900,
-  blue100
-} from 'material-ui/styles/colors';
-
+import { blue900, blue100 } from 'material-ui/styles/colors';
 import 'leaflet';
 import 'leaflet.markercluster';
 import * as _ from "lodash";
 
 import LivemapContainer from "./livemap-container"
-import Chart from "../components/chart"
+import ChartContainer from "./chart-container"
+
 const styles = {
   root: {
     display: 'flex',
@@ -103,6 +100,7 @@ class ParkingApp extends React.Component {
   }
 
   handleTimeseriesClick() {
+
     this.setState({
       cardExpanded: true,
       analysisType: "Time series analysis"
@@ -135,7 +133,9 @@ class ParkingApp extends React.Component {
     //var mongodbFilter = {ID: {$eq: 21}};
     var mongodbOptions = { sort: { ID: -1 }};
     var optionsRow;
-    
+
+    let chartOptions = { sort: { timestamp: -1 }, limit: 10};
+
     if (this.state.currentMarker!=null) {
       optionsRow = (
         <div className="flex-item-1-row">
@@ -172,7 +172,7 @@ class ParkingApp extends React.Component {
             </CardMedia>
             <CardTitle subtitle={this.state.analysisType} expandable={true} />
             <CardText expandable={true}>
-              <Chart/>
+              <ChartContainer resourceId={Meteor.settings.public.parkingTable} options={chartOptions}/>
               <DatePicker
                 autoOk={true}
                 floatingLabelText="Filter date"
