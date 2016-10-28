@@ -1,3 +1,5 @@
+"use strict";
+
 import React from "react";
 import ReactDOM from 'react-dom';
 import {Meteor} from "meteor/meteor";
@@ -11,13 +13,13 @@ import FlatButton from 'material-ui/FlatButton';
 import Avatar from 'material-ui/Avatar';
 import FontIcon from "material-ui/FontIcon";
 import {
-  blue500,
-  pink400,
-  purple500,
+  blue900,
+  blue100
 } from 'material-ui/styles/colors';
 
 import 'leaflet';
 import 'leaflet.markercluster';
+import * as _ from "lodash";
 
 import LivemapContainer from "./livemap-container"
 import Chart from "../components/chart"
@@ -34,37 +36,83 @@ class ParkingApp extends React.Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      currentMarker:null,
+      snackBarMessage:"",
+      snackBarOpen: false,
+      smsToggleState: false
+    };
   }
 
   _onClickMarker(id) {
-    console.log(id);
+    let el = _.find(this.props.data, function(val) { return val.LotCode ==id; });
+    if (el!=undefined) {
+      this.setState({
+        currentMarker:el
+      });
+    }  
+  }
+
+  handleSmsSubscribeToggle() {
+      if(this.state.smsToggleState) {
+        this.setState({
+          smsToggleState: false
+        });
+      } else {
+        this.setState({
+          smsToggleState: true
+        });
+      }
+  }
+
+  handleSnackbarClose() {
+    this.setState({
+      snackBarOpen: false
+    });
+  };
+
+  componentWillMount() {
+    if (this.props.data.length) {
+      let minMarker = _.minBy(this.props.data,(val)=>{return val.LotCode});
+      this.setState({
+        currentMarker:minMarker
+      });
+    } else {
+      this.setState({
+        snackBarOpen: true,
+        snackBarMessage: "No parking metadata available!"
+      });
+    }
   }
 
   render() {
     var self = this;
     //var mongodbFilter = {ID: {$eq: 21}};
     var mongodbOptions = { sort: { ID: -1 }};
-
-    return (
-      <div className="flex-container-row">
+    var optionsRow;
+    
+    if (this.state.currentMarker!=null) {
+      optionsRow = (
         <div className="flex-item-1-row">
           <Card expanded={false}>
             <CardHeader
-              title="URL Avatar"
-              subtitle="Subtitle"
+              title={this.state.currentMarker.Street}
+              subtitle={this.state.currentMarker.BayType}
               avatar={<Avatar
-                        color={blue500}
+                        color={blue900}
+                        backgroundColor={blue100}
                         style={iconstyle}
-                        icon={<FontIcon className="material-icons" color={blue500}>local_parking</FontIcon>}
+                        icon={<FontIcon className="material-icons" color={blue900}>local_parking</FontIcon>}
                       />}
               actAsExpander={true}
               showExpandableButton={true}
             />
             <CardText>
               <Toggle
-                toggled={false}
+                toggled={this.state.smsToggleState}
                 labelPosition="right"
-                label="This toggle controls the expanded state of the component."
+                onToggle={this.handleSmsSubscribeToggle.bind(this)}
+                label="Subscribe to text messages updates."
               />
             </CardText>
             <CardMedia
@@ -85,7 +133,13 @@ class ParkingApp extends React.Component {
               <FlatButton label="Reduce"/>
             </CardActions>
           </Card>
-          </div>
+        </div>);
+    }
+
+    return (
+      <div>
+        <div className="flex-container-row">
+          {optionsRow}
           <div className="flex-item-2-row">
             <div className="leaflet-container">
               <LivemapContainer
@@ -94,8 +148,15 @@ class ParkingApp extends React.Component {
                 parkingMetadata={self.props.data}
                 onClickMarker={self._onClickMarker.bind(this)}
               />
-            </div>
+              </div>
           </div>
+        </div>
+        <Snackbar
+          open={this.state.snackBarOpen}
+          message={this.state.snackBarMessage}
+          autoHideDuration={4000}
+          onRequestClose={this.handleSnackbarClose.bind(this)}
+        />        
       </div>
     );
   }
