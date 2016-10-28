@@ -135,6 +135,7 @@ class ParkingApp extends React.Component {
     var optionsRow;
 
     let chartOptions = { sort: { timestamp: -1 }, limit: 10};
+    let chartFilter = {ID: {$eq: this.state.currentMarker.LotCode}};
 
     if (this.state.currentMarker!=null) {
       optionsRow = (
@@ -172,7 +173,11 @@ class ParkingApp extends React.Component {
             </CardMedia>
             <CardTitle subtitle={this.state.analysisType} expandable={true} />
             <CardText expandable={true}>
-              <ChartContainer resourceId={Meteor.settings.public.parkingTable} options={chartOptions}/>
+              <ChartContainer
+                resourceId={Meteor.settings.public.parkingTable}
+                filter={chartFilter}
+                options={chartOptions}
+              />
               <DatePicker
                 autoOk={true}
                 floatingLabelText="Filter date"

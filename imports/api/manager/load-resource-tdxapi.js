@@ -1,4 +1,4 @@
-import TDXAPI from "nqm-api-tdx";
+import TDXAPI from "nqm-api-tdx/client-api";
 import connectionManager from "./connection-manager";
 
 // Loads data for a given resource id from the TDX.
@@ -20,7 +20,6 @@ function loadResourceData({resourceId, filter, options}, onData) {
     tdxApi.getDatasetData(resourceId, filter, null, options, (err, response) => {
         if (err) console.log("Failed to get data: ", err);
         else {
-            console.log(response.data);
             onData(null, {data: response.data});
         }
     });
