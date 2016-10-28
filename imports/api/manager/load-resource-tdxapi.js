@@ -12,11 +12,8 @@ function loadResourceData({resourceId, filter, options}, onData) {
     };
     const tdxApi = new TDXAPI(config);
 
-    if (filter=='undefined')
-        filter = null;
-
-    if (options=='undefined')
-        options = null;
+    filter = filter || "";
+    options = options || "";
 
     console.log("loadResourceData tdxApi: ", resourceId, filter, options);
 
