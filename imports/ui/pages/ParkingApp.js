@@ -36,6 +36,13 @@ class ParkingApp extends React.Component {
   constructor(props) {
     super(props);
 
+    let date = new Date();
+    
+    date.setHours(0);
+    date.setMinutes(0);
+    date.setSeconds(0);
+    date.setMilliseconds(0);
+    
     this.state = {
       currentMarker:null,
       snackBarMessage:"",
@@ -43,7 +50,7 @@ class ParkingApp extends React.Component {
       smsToggleState: false,
       feedToggleState: false,
       cardExpanded: false,
-      filterDate: new Date(),
+      filterDate: date,
       analysisType: "Time series analysis"
     };
   }
@@ -134,8 +141,11 @@ class ParkingApp extends React.Component {
     var mongodbOptions = { sort: { ID: -1 }};
     var optionsRow;
 
-    let chartOptions = { sort: { timestamp: -1 }, limit: 500};
-    let chartFilter = {ID: {$eq: /*this.state.currentMarker.LotCode*/3}};
+    let gte = this.state.filterDate.getTime();
+    let lte = gte + 24*60*60*1000;
+    
+    let chartOptions = { sort: { timestamp: 1 }};
+    let chartFilter = {ID: {$eq: this.state.currentMarker.LotCode}, "$and":[{"timestamp":{"$gte":gte}},{"timestamp":{"$lte":lte}}]};
 
     if (this.state.currentMarker!=null) {
       optionsRow = (

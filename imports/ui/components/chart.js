@@ -8,36 +8,35 @@ class Chart extends React.Component {
         super(props);
     }
 
-    componentWillMount() {}
+    componentWillMount() {
+    }
 
     componentWillReceiveProps(nextProps) {}
 
     render() {
+        var dataArr = _.map(this.props.data, (val)=>{
+            return {x:val.timestamp, y:val.currentvalue};
+        });
+
+        console.log(dataArr);
+
         var data = {
             series: [{
                 name: 'series-1',
-                data: [{
-                    x: new Date(143134652600),
-                    y: 53
-                }, {
-                    x: new Date(143234652600),
-                    y: 35
-                }, {
-                    x: new Date(143334652600),
-                    y: 30
-                }, {
-                    x: new Date(143384652600),
-                    y: 30
-                }, {
-                    x: new Date(143568652600),
-                    y: 10
-                }]
+                data: dataArr
             }]
         };
 
         var options = {
+            onlyInteger: true,
+                showPoint: false,
+                lineSmooth: Chartist.Interpolation.step({
+                    postpone: true,
+                    fillHoles: false
+                }),
             axisX: {
                 type: Chartist.FixedScaleAxis,
+                stretch: true,
                 divisor: 5,
                 labelInterpolationFnc: function (value) {
                     return moment(value).format('HH:mm');
