@@ -17,7 +17,10 @@ class Chart extends React.Component {
     componentWillReceiveProps(nextProps) {}
 
     render() {
-        var graphData, barData, data, options;
+        let graphData, barData, data, options;
+        let responsiveOptions = "";
+        let ret;
+        let className = "analysis-"+this.props.type;
 
         if (this.props.type=="Line") {
             graphData = _.map(this.props.data, (val)=>{
@@ -48,6 +51,15 @@ class Chart extends React.Component {
                     }
                 }
             };
+            ret = (<div>
+                <ChartistGraph
+                    className={className}
+                    data = {data}
+                    options = {options}
+                    type = {this.props.type}
+                    responsive-options={responsiveOptions}
+                />
+                </div>);
         } else if (this.props.type=="Bar"){
             let bounds = [];
 
@@ -79,17 +91,40 @@ class Chart extends React.Component {
                 }
             });
 
-            console.log(graphData);
-        }
+            data = {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                series: [
+                    [3, 2, 9, 5, 4, 6, 4, 6, 7, 8, 7, 4]
+                ]
+            };
 
-        return (<div>
+            options = {
+                seriesBarDistance: 10
+            };
+
+            responsiveOptions = [
+                ['screen and (max-width: 640px)', {
+                    seriesBarDistance: 5,
+                    axisX: {
+                        labelInterpolationFnc: function (value) {
+                        return value[0];
+                        }
+                    }
+                }]
+            ];
+
+            ret=(<div>
                 <ChartistGraph
-                    className="analysis"
+                    className={className}
                     data = {data}
                     options = {options}
                     type = {this.props.type}
+                    responsive-options={responsiveOptions}
                 />
                 </div>);
+        }
+
+        return ret
     }
 }
 
