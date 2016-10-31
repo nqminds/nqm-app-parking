@@ -79,14 +79,12 @@
     flex-basis: 200px;
 }
 
-.axis--x path {
-  display: none;
-}
-
-.line {
-  fill: none;
-  stroke: steelblue;
-  stroke-width: 1.5px;
+/* Use this selector to override the line style on a given series */
+.ct-series-a .ct-line {
+  /* Set the colour of this series line */
+  stroke: red;
+  /* Control the thikness of your lines */
+  stroke-width: 3px;
 }
 
 .muidocs-icon-communication-phone:before {

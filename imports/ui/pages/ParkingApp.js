@@ -51,7 +51,8 @@ class ParkingApp extends React.Component {
       feedToggleState: false,
       cardExpanded: false,
       filterDate: date,
-      analysisType: "Time series analysis"
+      analysisType: "Time series analysis",
+      chartType: "Line"
     };
   }
 
@@ -110,14 +111,16 @@ class ParkingApp extends React.Component {
 
     this.setState({
       cardExpanded: true,
-      analysisType: "Time series analysis"
+      analysisType: "Time series analysis",
+      chartType: "Line"
     });
   }
 
   handleDistributionClick() {
     this.setState({
       cardExpanded: true,
-      analysisType: "Distribution analysis"
+      analysisType: "Distribution analysis",
+      chartType: "Bar"
     });
   }
 
@@ -187,6 +190,8 @@ class ParkingApp extends React.Component {
                 resourceId={Meteor.settings.public.parkingTable}
                 filter={chartFilter}
                 options={chartOptions}
+                type={this.state.chartType}
+                barcount={this.state.currentMarker.BayCount}
               />
               <DatePicker
                 autoOk={true}
