@@ -134,8 +134,8 @@ class ParkingApp extends React.Component {
     var mongodbOptions = { sort: { ID: -1 }};
     var optionsRow;
 
-    let chartOptions = { sort: { timestamp: -1 }, limit: 10};
-    let chartFilter = {ID: {$eq: this.state.currentMarker.LotCode}};
+    let chartOptions = { sort: { timestamp: -1 }, limit: 500};
+    let chartFilter = {ID: {$eq: /*this.state.currentMarker.LotCode*/3}};
 
     if (this.state.currentMarker!=null) {
       optionsRow = (
