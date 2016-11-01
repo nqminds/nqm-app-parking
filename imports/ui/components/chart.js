@@ -1,5 +1,5 @@
 import React from 'react';
-import ChartistGraph from 'react-chartist'
+import ChartistGraph from './react-chartist'
 import Chartist from 'chartist';
 import moment from 'moment'
 import * as _ from 'lodash'
@@ -20,9 +20,14 @@ class Chart extends React.Component {
         let graphData, barData, data, options;
         let responsiveOptions = "";
         let ret;
-        let className = "analysis-"+this.props.type;
+        let className;
+        let id;
 
         if (this.props.type=="Line") {
+            
+            className = "ct-line-chart"
+            id="line-chart";
+
             graphData = _.map(this.props.data, (val)=>{
                 return {x:val.timestamp, y:val.currentvalue};
             });
@@ -51,17 +56,11 @@ class Chart extends React.Component {
                     }
                 }
             };
-            ret = (<div>
-                <ChartistGraph
-                    className={className}
-                    data = {data}
-                    options = {options}
-                    type = {this.props.type}
-                    responsive-options={responsiveOptions}
-                />
-                </div>);
         } else if (this.props.type=="Bar"){
             let bounds = [];
+            
+            className = "ct-bar-chart"
+            id = "bar-chart";
 
             if (this.props.barcount<=3) {
                 for (i=0;i<=this.props.barcount;i++)
@@ -112,9 +111,11 @@ class Chart extends React.Component {
                     }
                 }]
             ];
-
-            ret=(<div>
+        }
+        
+        return (<div>
                 <ChartistGraph
+                    id = {id}
                     className={className}
                     data = {data}
                     options = {options}
@@ -122,9 +123,6 @@ class Chart extends React.Component {
                     responsive-options={responsiveOptions}
                 />
                 </div>);
-        }
-
-        return ret
     }
 }
 

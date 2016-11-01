@@ -87,6 +87,10 @@
   stroke-width: 3px;
 }
 
+#hidden {
+    display: none;
+}
+
 .muidocs-icon-communication-phone:before {
 	content: "\e601";
 }

@@ -139,16 +139,24 @@ class ParkingApp extends React.Component {
   }
 
   render() {
-    var self = this;
-    //var mongodbFilter = {ID: {$eq: 21}};
-    var mongodbOptions = { sort: { ID: -1 }};
-    var optionsRow;
+    let self = this;
+    let mongodbOptions = { sort: { ID: -1 }};
+    let optionsRow;
 
-    let gte = this.state.filterDate.getTime();
-    let lte = gte + 24*60*60*1000;
+    const gte = this.state.filterDate.getTime();
+    const lte = gte + 24*60*60*1000;
     
-    let chartOptions = { sort: { timestamp: 1 }};
-    let chartFilter = {ID: {$eq: this.state.currentMarker.LotCode}, "$and":[{"timestamp":{"$gte":gte}},{"timestamp":{"$lte":lte}}]};
+    const chartOptions = { sort: { timestamp: 1 }};
+    const chartFilter = {ID: {$eq: this.state.currentMarker.LotCode}, "$and":[{"timestamp":{"$gte":gte}},{"timestamp":{"$lte":lte}}]};
+    let lineChartVisibility, barChartVisibility;
+
+    if (this.state.chartType=="Line") {
+      lineChartVisibility="";
+      barChartVisibility="hidden";
+    } else {
+      lineChartVisibility="hidden";
+      barChartVisibility="";
+    }
 
     if (this.state.currentMarker!=null) {
       optionsRow = (
@@ -186,13 +194,24 @@ class ParkingApp extends React.Component {
             </CardMedia>
             <CardTitle subtitle={this.state.analysisType} expandable={true} />
             <CardText expandable={true}>
-              <ChartContainer
-                resourceId={Meteor.settings.public.parkingTable}
-                filter={chartFilter}
-                options={chartOptions}
-                type={this.state.chartType}
-                barcount={this.state.currentMarker.BayCount}
-              />
+              <div id={lineChartVisibility}>
+                <ChartContainer
+                  resourceId={Meteor.settings.public.parkingTable}
+                  filter={chartFilter}
+                  options={chartOptions}
+                  type="Line"
+                  barcount={this.state.currentMarker.BayCount}
+                />
+              </div>
+              <div id={barChartVisibility}>
+                <ChartContainer
+                  resourceId={Meteor.settings.public.parkingTable}
+                  filter={chartFilter}
+                  options={chartOptions}
+                  type="Bar"
+                  barcount={this.state.currentMarker.BayCount}
+                />
+              </div>            
               <DatePicker
                 autoOk={true}
                 floatingLabelText="Filter date"
