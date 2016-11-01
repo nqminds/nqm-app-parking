@@ -151,11 +151,11 @@ class ParkingApp extends React.Component {
     let lineChartVisibility, barChartVisibility;
 
     if (this.state.chartType=="Line") {
-      lineChartVisibility="";
-      barChartVisibility="hidden";
+      lineChartVisibility={visibility:"", load: true};
+      barChartVisibility={visibility:"hidden", load:false};
     } else {
-      lineChartVisibility="hidden";
-      barChartVisibility="";
+      lineChartVisibility={visibility:"hidden", load:false};
+      barChartVisibility={visibility:"", load: true};
     }
 
     if (this.state.currentMarker!=null) {
@@ -194,20 +194,22 @@ class ParkingApp extends React.Component {
             </CardMedia>
             <CardTitle subtitle={this.state.analysisType} expandable={true} />
             <CardText expandable={true}>
-              <div id={lineChartVisibility}>
+              <div id={lineChartVisibility.visibility}>
                 <ChartContainer
                   resourceId={Meteor.settings.public.parkingTable}
                   filter={chartFilter}
                   options={chartOptions}
+                  load={lineChartVisibility.load}
                   type="Line"
                   barcount={this.state.currentMarker.BayCount}
                 />
               </div>
-              <div id={barChartVisibility}>
+              <div id={barChartVisibility.visibility}>
                 <ChartContainer
                   resourceId={Meteor.settings.public.parkingTable}
                   filter={chartFilter}
                   options={chartOptions}
+                  load={barChartVisibility.load}
                   type="Bar"
                   barcount={this.state.currentMarker.BayCount}
                 />

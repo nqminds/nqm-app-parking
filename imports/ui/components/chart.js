@@ -58,18 +58,25 @@ class Chart extends React.Component {
             };
         } else if (this.props.type=="Bar"){
             let bounds = [];
-            
+            let labelData = [];
+
             className = "ct-bar-chart"
             id = "bar-chart";
 
             if (this.props.barcount<=3) {
-                for (i=0;i<=this.props.barcount;i++)
+                for (i=0;i<=this.props.barcount;i++) {
                     bounds.push([i,i,i]);
+                    labelData.push(i.toString());
+                }
             } else {
                 bounds.push([0,this.props.barcount/4,0]);
                 bounds.push([this.props.barcount/4,this.props.barcount/2,1]);
                 bounds.push([this.props.barcount/2,3*this.props.barcount/4,2]);
                 bounds.push([3*this.props.barcount/4,this.props.barcount,3]);
+                labelData.push("[0,"+_.round(this.props.barcount/4)+")");
+                labelData.push("["+_.round(this.props.barcount/4)+","+_.round(this.props.barcount/2)+")");
+                labelData.push("["+_.round(this.props.barcount/2)+","+_.round(3*this.props.barcount/4)+")");
+                labelData.push("["+_.round(3*this.props.barcount/4)+","+this.props.barcount+"]");
             }
             
 
@@ -91,10 +98,8 @@ class Chart extends React.Component {
             });
 
             data = {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                series: [
-                    [3, 2, 9, 5, 4, 6, 4, 6, 7, 8, 7, 4]
-                ]
+                labels: labelData,
+                series: [ graphData ]
             };
 
             options = {
