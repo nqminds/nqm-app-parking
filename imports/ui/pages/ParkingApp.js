@@ -65,6 +65,10 @@ class ParkingApp extends React.Component {
     }  
   }
 
+  _onSendFeedData(data) {
+  
+  }
+
   handleFilterDate(event, date) {
     this.setState({
       filterDate: date
@@ -252,6 +256,7 @@ class ParkingApp extends React.Component {
                 options={mongodbOptions}
                 parkingMetadata={self.props.data}
                 onClickMarker={self._onClickMarker.bind(this)}
+                onSendFeedData={self._onSendFeedData.bind(this)}
               />
               </div>
           </div>

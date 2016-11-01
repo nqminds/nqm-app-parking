@@ -64,6 +64,7 @@ class Livemap extends React.Component {
                     parkingMetadata={self.props.parkingMetadata}
                     data={self.props.data}
                     onClickMarker={self.props.onClickMarker}
+                    onSendFeedData={self.props.onSendFeedData}
                 />
             </Map>
         );
@@ -73,7 +74,8 @@ class Livemap extends React.Component {
 Livemap.propTypes = {
     parkingMetadata: React.PropTypes.array.isRequired,
     data: React.PropTypes.array.isRequired,
-    onClickMarker: React.PropTypes.func.isRequired
+    onClickMarker: React.PropTypes.func.isRequired,
+    onSendFeedData: React.PropTypes.func.isRequired
 };
 
 Livemap.defaultProps = {

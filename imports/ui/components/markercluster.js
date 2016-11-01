@@ -62,7 +62,8 @@ class MarkerCluster extends MapLayer {
 MarkerCluster.propTypes = {
     parkingMetadata: React.PropTypes.array.isRequired,
     data: React.PropTypes.array.isRequired,
-    onClickMarker: React.PropTypes.func.isRequired
+    onClickMarker: React.PropTypes.func.isRequired,
+    onSendFeedData: React.PropTypes.func.isRequired,
 };
 
 export default MarkerCluster;
