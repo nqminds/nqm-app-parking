@@ -18,9 +18,11 @@ import { blue900, blue100 } from 'material-ui/styles/colors';
 import 'leaflet';
 import 'leaflet.markercluster';
 import * as _ from "lodash";
+import TDXAPI from "nqm-api-tdx/client-api";
 
 import LivemapContainer from "./livemap-container"
 import ChartContainer from "./chart-container"
+import connectionManager from "../../api/manager/connection-manager";
 
 const styles = {
   root: {
@@ -36,6 +38,13 @@ class ParkingApp extends React.Component {
   constructor(props) {
     super(props);
 
+    this.tdxApi = new TDXAPI({
+      commandHost: Meteor.settings.public.commandHost,
+      queryHost: Meteor.settings.public.queryHost,
+      accessToken: connectionManager.authToken
+    });
+
+    
     let date = new Date();
     
     date.setHours(0);
@@ -88,13 +97,36 @@ class ParkingApp extends React.Component {
   }
 
   handleFeedSubscribeToggle() {
+      let data = [{'ID':Number(this.state.currentMarker.LotCode), 'state':0}];
+
       if(this.state.feedToggleState) {
-        this.setState({
-          feedToggleState: false
+        this.tdxApi.updateDatasetData(Meteor.settings.public.liveFeedSubscribtion, {data}, true, (err, response)=>{
+          if(err) {
+            console.log(err);
+            this.setState({
+              snackBarOpen: true,
+              snackBarMessage: "Can't unsubscribe from feed!"
+            });
+          } else {
+            this.setState({
+              feedToggleState: false
+            });
+          }
         });
       } else {
-        this.setState({
-          feedToggleState: true
+        console.log(data);
+        this.tdxApi.updateDatasetData(Meteor.settings.public.liveFeedSubscribtion, {data}, true, (err, response)=>{
+          if(err) {
+            console.log(err);
+            this.setState({
+              snackBarOpen: true,
+              snackBarMessage: "Can't subscribe to feed!:"
+            });
+          } else {
+            this.setState({
+              feedToggleState: true
+            });
+          }
         });
       }
   }
