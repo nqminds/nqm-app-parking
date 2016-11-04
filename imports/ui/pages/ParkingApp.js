@@ -97,12 +97,11 @@ class ParkingApp extends React.Component {
   }
 
   handleFeedSubscribeToggle() {
-      let data = [{'ID':Number(this.state.currentMarker.LotCode), 'state':0}];
+      let data = [{'ID':Number(this.state.currentMarker.LotCode), 'state':false}];
 
       if(this.state.feedToggleState) {
-        this.tdxApi.updateDatasetData(Meteor.settings.public.liveFeedSubscribtion, {data}, true, (err, response)=>{
+        this.tdxApi.updateDatasetData(Meteor.settings.public.liveFeedSubscribtion, data, true, (err, response)=>{
           if(err) {
-            console.log(err);
             this.setState({
               snackBarOpen: true,
               snackBarMessage: "Can't unsubscribe from feed!"
@@ -114,13 +113,12 @@ class ParkingApp extends React.Component {
           }
         });
       } else {
-        console.log(data);
-        this.tdxApi.updateDatasetData(Meteor.settings.public.liveFeedSubscribtion, {data}, true, (err, response)=>{
+        data[0].state = true;
+        this.tdxApi.updateDatasetData(Meteor.settings.public.liveFeedSubscribtion, data, true, (err, response)=>{
           if(err) {
-            console.log(err);
             this.setState({
               snackBarOpen: true,
-              snackBarMessage: "Can't subscribe to feed!:"
+              snackBarMessage: "Can't subscribe to feed!"
             });
           } else {
             this.setState({
