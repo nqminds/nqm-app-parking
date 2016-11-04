@@ -42,6 +42,7 @@ class Livemap extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        //this.props.onSendFeedData(nextProps.data);
     }
     
     render() {

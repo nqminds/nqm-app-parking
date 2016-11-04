@@ -23,11 +23,12 @@ import TDXAPI from "nqm-api-tdx/client-api";
 import LivemapContainer from "./livemap-container"
 import ChartContainer from "./chart-container"
 import connectionManager from "../../api/manager/connection-manager";
+import FeedList from "../components/feedlist"
 
 const styles = {
   root: {
     display: 'flex',
-    flexWrap: 'wrap',
+    flexWrap: 'wrap'
   }
 };
 
@@ -60,6 +61,9 @@ class ParkingApp extends React.Component {
       feedToggleState: false,
       cardExpanded: false,
       filterDate: date,
+      liveFeed: {},
+      feedData: {},
+      parkingMetadata: [],
       analysisType: "Time series analysis",
       chartType: "Line"
     };
@@ -75,7 +79,17 @@ class ParkingApp extends React.Component {
   }
 
   _onSendFeedData(data) {
-  
+    // if (!_.isEmpty(this.state.liveFeed)) {
+    //   let currentFeedData={};
+    //   _.forEach(data, (val)=>{
+    //     if (this.state.liveFeed[val.ID]!=undefined) {
+    //       if (this.state.liveFeed[val.ID])
+    //         currentFeedData[val.ID] = val.currentvalue;
+    //     }
+    //   });
+
+    //   this.setState({ feedData: currentFeedData });
+    // }
   }
 
   handleFilterDate(event, date) {
@@ -172,6 +186,25 @@ class ParkingApp extends React.Component {
     }
   }
 
+  componentDidMount() {
+    let currentLiveFeed = {};
+
+    this.tdxApi.getDatasetData(Meteor.settings.public.liveFeedSubscribtion, null, null, null, (err, data)=>{
+      if(err) {
+        this.setState({
+          snackBarOpen: true,
+          snackBarMessage: "Can't retrieve the live feed data!"
+        });
+      } else {
+          _.forEach(data.data, (val)=>{
+            currentLiveFeed[val.ID] = val.state;
+          });
+
+          this.setState({ liveFeed: currentLiveFeed });
+      }
+    });
+  }
+
   render() {
     let self = this;
     let mongodbOptions = { sort: { ID: -1 }};
@@ -194,7 +227,6 @@ class ParkingApp extends React.Component {
 
     if (this.state.currentMarker!=null) {
       optionsRow = (
-        <div className="flex-item-1-row">
           <Card expanded={this.state.cardExpanded} onExpandChange={this.handleExpandChange.bind(this)}>
             <CardHeader
               title={this.state.currentMarker.Street}
@@ -271,14 +303,28 @@ class ParkingApp extends React.Component {
                 onTouchTap={this.handleDistributionClick.bind(this)}
               />
             </CardActions>
-          </Card>
-        </div>);
+          </Card>);
     }
 
     return (
       <div>
         <div className="flex-container-row">
-          {optionsRow}
+          <div className="flex-item-1-row">
+            <div className="flex-container-column">
+              <div className="flex-item-1-column">
+                {optionsRow}
+              </div>
+              <div className="flex-item-2-column">
+                <Paper zDepth={1}>
+                  <FeedList
+                    feedList={this.state.liveFeed}
+                    parkingMetadata={self.props.data}
+                    feedData={this.state.feedData}
+                  />
+                </Paper>
+              </div>
+            </div>
+          </div>
           <div className="flex-item-2-row">
             <div className="leaflet-container">
               <LivemapContainer

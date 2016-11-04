@@ -65,12 +65,12 @@
 }
 
 .flex-item-2-column {
-	width: 300px;
-	height: 250px;
     flex-grow: 1;
     flex-shrink: 0;
     flex-basis: 200px;
+    margin:5px;
 }
+
 .leaflet-container {
     min-height: 800px;
     width: 100%;
