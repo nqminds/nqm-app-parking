@@ -53,8 +53,9 @@ class ParkingApp extends React.Component {
     date.setSeconds(0);
     date.setMilliseconds(0);
     
+    const currentMarker = {LotCode:0};
     this.state = {
-      currentMarker:null,
+      currentMarker:currentMarker,
       snackBarMessage:"",
       snackBarOpen: false,
       smsToggleState: false,
@@ -63,17 +64,19 @@ class ParkingApp extends React.Component {
       filterDate: date,
       liveFeed: {},
       feedData: {},
-      parkingMetadata: [],
+      parkingMetadata: {},
       analysisType: "Time series analysis",
       chartType: "Line"
     };
   }
 
   _onClickMarker(id) {
-    let el = _.find(this.props.data, function(val) { return val.LotCode ==id; });
+    //let el = _.find(this.props.data, function(val) { return val.LotCode ==id; });
+    let el = this.state.parkingMetadata[id];
+
     if (el!=undefined) {
       this.setState({
-        currentMarker:el
+        currentMarker: el
       });
     }  
   }
@@ -173,17 +176,34 @@ class ParkingApp extends React.Component {
   }
 
   componentWillMount() {
-    if (this.props.data.length) {
-      let minMarker = _.minBy(this.props.data,(val)=>{return val.LotCode});
-      this.setState({
-        currentMarker:minMarker
-      });
-    } else {
-      this.setState({
-        snackBarOpen: true,
-        snackBarMessage: "No parking metadata available!"
-      });
-    }
+    let parkingMetadata = {};
+
+    this.tdxApi.getDatasetData(Meteor.settings.public.parkingMetadata, null, null, null, (err, data)=>{
+      if (err) {
+        this.setState({
+          snackBarOpen: true,
+          snackBarMessage: "No parking metadata available!"
+        });  
+      } else {
+        if (!data.data.length){
+          this.setState({
+            snackBarOpen: true,
+            snackBarMessage: "No parking metadata available!"
+          });          
+        } else {
+          let minMarker = _.minBy(data.data,(val)=>{return val.LotCode});
+
+          _.forEach(data.data, (val)=>{
+            parkingMetadata[val.LotCode] = val;
+          });
+
+          this.setState({
+            'currentMarker':minMarker,
+            'parkingMetadata': parkingMetadata
+          });
+        }
+      }
+    });
   }
 
   componentDidMount() {
@@ -318,7 +338,7 @@ class ParkingApp extends React.Component {
                 <Paper zDepth={1}>
                   <FeedList
                     feedList={this.state.liveFeed}
-                    parkingMetadata={self.props.data}
+                    parkingMetadata={this.state.parkingMetadata}
                     feedData={this.state.feedData}
                   />
                 </Paper>

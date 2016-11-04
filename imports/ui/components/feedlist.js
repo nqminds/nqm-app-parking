@@ -23,7 +23,7 @@ class FeedList extends React.Component {
         let self = this;
 
         const list = _.map(this.props.feedList, (val,key)=>{
-            let el = _.find(this.props.parkingMetadata, (val)=>{ return val.LotCode ==key; });
+            let el = this.props.parkingMetadata[key];
             return <ListItem
                         key={key}
                         leftAvatar={
@@ -54,7 +54,7 @@ class FeedList extends React.Component {
 
 FeedList.propTypes = {
     feedList: React.PropTypes.object.isRequired,
-    parkingMetadata: React.PropTypes.array.isRequired,
+    parkingMetadata: React.PropTypes.object.isRequired,
     feedData: React.PropTypes.object.isRequired
 };
 
