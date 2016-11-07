@@ -17,14 +17,17 @@ class Livemap extends React.Component {
         super(props);
 
         this.state = {
-            centerPosition: L.latLng(defaultData[0], defaultData[1]),
-            maxBounds: null
+            centerPosition: L.latLng(defaultData[0], defaultData[1])/*,
+            maxBounds: null*/
         };
 
-        this._data = [];
+        //this._data = [];
+        /*
         this._setMapBounds = this._setMapBounds.bind(this);
+        */
     }
 
+    /*
     _setMapBounds(parkingMetadata) {
         let bounds = L.latLngBounds(_.map(parkingMetadata, (val, key) => {
             return new L.LatLng(val.Latitude, val.Longitude);
@@ -35,15 +38,25 @@ class Livemap extends React.Component {
             maxBounds: bounds
         });
     }
+    */
 
     componentWillMount() {
+        if (this.props.centerPosition!=null)
+            this.setState({centerPosition: this.props.centerPosition});
+            
+        /*
         if (!_.isEmpty(this.props.parkingMetadata))
             this._setMapBounds(this.props.parkingMetadata);
+            */
     }
 
     componentWillReceiveProps(nextProps) {
+        /*
         if (_.isEmpty(this.state.maxBounds) && !_.isEmpty(nextProps.parkingMetadata))
             this._setMapBounds(nextProps.parkingMetadata);
+            */
+        if (this.props.centerPosition!=null)
+            this.setState({centerPosition: nextProps.centerPosition})
     }
     
     render() {
@@ -55,13 +68,14 @@ class Livemap extends React.Component {
                                 parkingMetadata={self.props.parkingMetadata}
                                 realTimeData={self.props.realTimeData}
                                 onClickMarker={self.props.onClickMarker}
-                                onSendFeedData={self.props.onSendFeedData}
                                 />
         }
 
+        console.log(this.state.centerPosition);
+        
         if (self.state.maxBounds!=null) {
             mapComponent = (<Map
-                    center={self.state.maxBounds.getCenter()}
+                    center={this.state.centerPosition}
                     zoom={18}
                     scrollWheelZoom={false}
                     touchZoom={false}
@@ -81,10 +95,10 @@ class Livemap extends React.Component {
 }
 
 Livemap.propTypes = {
+        centerPosition: React.PropTypes.object.isRequired,
     parkingMetadata: React.PropTypes.object.isRequired,
     realTimeData: React.PropTypes.array.isRequired,
     onClickMarker: React.PropTypes.func.isRequired,
-    onSendFeedData: React.PropTypes.func.isRequired
 };
 
 export default Livemap;

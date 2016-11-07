@@ -230,6 +230,8 @@ class ParkingApp extends React.Component {
     let lineChartVisibility, barChartVisibility;
     let toggleState = false;
 
+    let cPos = L.latLng(52.008778, -0.771088);
+
     const appBarHeight = Meteor.settings.public.showAppBar !== false ? 50 : 0;
     const leftPanelWidth = 380;
     const styles = {
@@ -263,7 +265,11 @@ class ParkingApp extends React.Component {
 
       if (this.state.liveFeed[this.state.currentMarker.LotCode]!=undefined)
         toggleState = this.state.liveFeed[this.state.currentMarker.LotCode]? true : false;
-      
+
+      if (this.state.currentMarker.Latitude!=undefined && this.state.currentMarker.Longitude!=undefined)
+        cPos = L.latLng(this.state.currentMarker.Latitude,
+                          this.state.currentMarker.Longitude);
+
       optionsRow = (
           <Card expanded={this.state.cardExpanded} onExpandChange={this.handleExpandChange.bind(this)}>
             <CardHeader
@@ -343,7 +349,8 @@ class ParkingApp extends React.Component {
             </CardActions>
           </Card>);
     }
-
+    
+    console.log(cPos);
     return (
         <div style={styles.root}>
           <div style={styles.leftPanel}>
@@ -366,7 +373,7 @@ class ParkingApp extends React.Component {
                 parkingMetadata={this.state.parkingMetadata}
                 realTimeData={this.props.data}
                 onClickMarker={self._onClickMarker.bind(this)}
-                onSendFeedData={self._onSendFeedData.bind(this)}
+                centerPosition={cPos}
               />
           </div>
           <Snackbar
