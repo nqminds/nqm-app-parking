@@ -237,6 +237,27 @@ class ParkingApp extends React.Component {
     const chartFilter = {ID: {$eq: this.state.currentMarker.LotCode}, "$and":[{"timestamp":{"$gte":gte}},{"timestamp":{"$lte":lte}}]};
     let lineChartVisibility, barChartVisibility;
 
+    const appBarHeight = Meteor.settings.public.showAppBar !== false ? 50 : 0;
+    const leftPanelWidth = 380;
+    const styles = {
+      root: {
+        height: "100%"
+      },
+      leftPanel: {
+        position: "fixed",
+        top: appBarHeight,
+        bottom: 0,
+        width: leftPanelWidth
+      },
+      mainPanel: {
+        position: "absolute",        
+        top: appBarHeight,
+        bottom: 0,
+        left: leftPanelWidth,
+        right: 0
+      }
+    };
+
     if (this.state.chartType=="Line") {
       lineChartVisibility={visibility:"", load: true};
       barChartVisibility={visibility:"hidden", load:false};
@@ -327,26 +348,22 @@ class ParkingApp extends React.Component {
     }
 
     return (
-      <div>
-        <div className="flex-container-row">
-          <div className="flex-item-1-row">
+        <div style={styles.root}>
+          <div style={styles.leftPanel}>
             <div className="flex-container-column">
               <div className="flex-item-1-column">
                 {optionsRow}
               </div>
               <div className="flex-item-2-column">
-                <Paper zDepth={1}>
                   <FeedList
                     feedList={this.state.liveFeed}
                     parkingMetadata={this.state.parkingMetadata}
                     feedData={this.state.feedData}
                   />
-                </Paper>
               </div>
             </div>
           </div>
-          <div className="flex-item-2-row">
-            <div className="leaflet-container">
+          <div style={styles.mainPanel}>
               <LivemapContainer
                 resourceId={Meteor.settings.public.parkingTableLatest}
                 options={mongodbOptions}
@@ -354,16 +371,14 @@ class ParkingApp extends React.Component {
                 onClickMarker={self._onClickMarker.bind(this)}
                 onSendFeedData={self._onSendFeedData.bind(this)}
               />
-              </div>
           </div>
+          <Snackbar
+            open={this.state.snackBarOpen}
+            message={this.state.snackBarMessage}
+            autoHideDuration={4000}
+            onRequestClose={this.handleSnackbarClose.bind(this)}
+          />
         </div>
-        <Snackbar
-          open={this.state.snackBarOpen}
-          message={this.state.snackBarMessage}
-          autoHideDuration={4000}
-          onRequestClose={this.handleSnackbarClose.bind(this)}
-        />        
-      </div>
     );
   }
 }

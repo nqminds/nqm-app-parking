@@ -79,10 +79,15 @@ class Layout extends React.Component{
       content = <Login onEnter={this._onUserPassword} />;
     }
 
+    var appBar;
+    if (Meteor.settings.public.showAppBar !== false) {
+      appBar = <AppBar style={styles.appBar} title="NQM Parking Management" showMenuIconButton={false} iconElementRight={menuButton} />;
+    }
+
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
         <div>
-          <AppBar style={styles.appBar} title="NQM Parking Management" showMenuIconButton={false} iconElementRight={menuButton} />
+          {appBar}
           <div style={styles.layoutContent}>
             {content}
           </div>
