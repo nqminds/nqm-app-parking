@@ -6,7 +6,6 @@ class MarkerCluster extends MapLayer {
     constructor(props) {
         super(props);
 
-        //this._parkingMetadata = [];
         this._markers = {};    
     }
 
@@ -39,7 +38,7 @@ class MarkerCluster extends MapLayer {
     }
 
     componentWillReceiveProps(nextProps) {
-        _.forEach(nextProps.data, (val)=>{
+        _.forEach(nextProps.realTimeData, (val)=>{
             let color = Number(val.currentvalue)?'blue':'red';
             this._markers[Number(val.ID)].options.icon.setColor(color);
             this._markers[Number(val.ID)].options.icon.setText(val.currentvalue.toString());    
@@ -57,7 +56,7 @@ class MarkerCluster extends MapLayer {
 
 MarkerCluster.propTypes = {
     parkingMetadata: React.PropTypes.object.isRequired,
-    data: React.PropTypes.array.isRequired,
+    realTimeData: React.PropTypes.array.isRequired,
     onClickMarker: React.PropTypes.func.isRequired
 };
 

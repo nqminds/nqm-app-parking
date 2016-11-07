@@ -20,7 +20,7 @@ import 'leaflet.markercluster';
 import * as _ from "lodash";
 import TDXAPI from "nqm-api-tdx/client-api";
 
-import LivemapContainer from "./livemap-container"
+import Livemap from "../components/livemap"
 import ChartContainer from "./chart-container"
 import connectionManager from "../../api/manager/connection-manager";
 import FeedList from "../components/feedlist"
@@ -59,11 +59,9 @@ class ParkingApp extends React.Component {
       snackBarMessage:"",
       snackBarOpen: false,
       smsToggleState: false,
-      feedToggleState: false,
       cardExpanded: false,
       filterDate: date,
       liveFeed: {},
-      feedData: {},
       parkingMetadata: {},
       analysisType: "Time series analysis",
       chartType: "Line"
@@ -71,7 +69,6 @@ class ParkingApp extends React.Component {
   }
 
   _onClickMarker(id) {
-    //let el = _.find(this.props.data, function(val) { return val.LotCode ==id; });
     let el = this.state.parkingMetadata[id];
 
     if (el!=undefined) {
@@ -82,17 +79,6 @@ class ParkingApp extends React.Component {
   }
 
   _onSendFeedData(data) {
-    // if (!_.isEmpty(this.state.liveFeed)) {
-    //   let currentFeedData={};
-    //   _.forEach(data, (val)=>{
-    //     if (this.state.liveFeed[val.ID]!=undefined) {
-    //       if (this.state.liveFeed[val.ID])
-    //         currentFeedData[val.ID] = val.currentvalue;
-    //     }
-    //   });
-
-    //   this.setState({ feedData: currentFeedData });
-    // }
   }
 
   handleFilterDate(event, date) {
@@ -114,32 +100,39 @@ class ParkingApp extends React.Component {
   }
 
   handleFeedSubscribeToggle() {
-      let data = [{'ID':Number(this.state.currentMarker.LotCode), 'state':false}];
+      let dataFeed = {'ID':Number(this.state.currentMarker.LotCode), 'state':0};
+      let currentLiveFeed = _.clone(this.state.liveFeed);
+      let toggleState = false;
 
-      if(this.state.feedToggleState) {
-        this.tdxApi.updateDatasetData(Meteor.settings.public.liveFeedSubscribtion, data, true, (err, response)=>{
+      if (this.state.liveFeed[this.state.currentMarker.LotCode]!=undefined)
+        toggleState = this.state.liveFeed[this.state.currentMarker.LotCode];
+
+      if(toggleState) {
+        this.tdxApi.updateDatasetData(Meteor.settings.public.liveFeedSubscribtion, dataFeed, true, (err, response)=>{
           if(err) {
             this.setState({
               snackBarOpen: true,
               snackBarMessage: "Can't unsubscribe from feed!"
             });
           } else {
+            currentLiveFeed[dataFeed.ID] = false;
             this.setState({
-              feedToggleState: false
+              liveFeed: currentLiveFeed
             });
           }
         });
       } else {
-        data[0].state = true;
-        this.tdxApi.updateDatasetData(Meteor.settings.public.liveFeedSubscribtion, data, true, (err, response)=>{
+        dataFeed.state = 1;
+        this.tdxApi.updateDatasetData(Meteor.settings.public.liveFeedSubscribtion, dataFeed, true, (err, response)=>{
           if(err) {
             this.setState({
               snackBarOpen: true,
               snackBarMessage: "Can't subscribe to feed!"
             });
           } else {
+            currentLiveFeed[dataFeed.ID] = true;
             this.setState({
-              feedToggleState: true
+              liveFeed: currentLiveFeed              
             });
           }
         });
@@ -227,7 +220,6 @@ class ParkingApp extends React.Component {
 
   render() {
     let self = this;
-    let mongodbOptions = { sort: { ID: -1 }};
     let optionsRow;
 
     const gte = this.state.filterDate.getTime();
@@ -236,6 +228,7 @@ class ParkingApp extends React.Component {
     const chartOptions = { sort: { timestamp: 1 }};
     const chartFilter = {ID: {$eq: this.state.currentMarker.LotCode}, "$and":[{"timestamp":{"$gte":gte}},{"timestamp":{"$lte":lte}}]};
     let lineChartVisibility, barChartVisibility;
+    let toggleState = false;
 
     const appBarHeight = Meteor.settings.public.showAppBar !== false ? 50 : 0;
     const leftPanelWidth = 380;
@@ -267,6 +260,10 @@ class ParkingApp extends React.Component {
     }
 
     if (this.state.currentMarker!=null) {
+
+      if (this.state.liveFeed[this.state.currentMarker.LotCode]!=undefined)
+        toggleState = this.state.liveFeed[this.state.currentMarker.LotCode]? true : false;
+      
       optionsRow = (
           <Card expanded={this.state.cardExpanded} onExpandChange={this.handleExpandChange.bind(this)}>
             <CardHeader
@@ -283,7 +280,7 @@ class ParkingApp extends React.Component {
             />
             <CardText>
               <Toggle
-                toggled={this.state.feedToggleState}
+                toggled={toggleState}
                 labelPosition="right"
                 onToggle={this.handleFeedSubscribeToggle.bind(this)}
                 label="Subscribe to live feed."
@@ -358,16 +355,16 @@ class ParkingApp extends React.Component {
                   <FeedList
                     feedList={this.state.liveFeed}
                     parkingMetadata={this.state.parkingMetadata}
-                    feedData={this.state.feedData}
+                    feedData={this.props.data}
+                    onItemClick={self._onClickMarker.bind(this)}
                   />
               </div>
             </div>
           </div>
           <div style={styles.mainPanel}>
-              <LivemapContainer
-                resourceId={Meteor.settings.public.parkingTableLatest}
-                options={mongodbOptions}
+              <Livemap
                 parkingMetadata={this.state.parkingMetadata}
+                realTimeData={this.props.data}
                 onClickMarker={self._onClickMarker.bind(this)}
                 onSendFeedData={self._onSendFeedData.bind(this)}
               />

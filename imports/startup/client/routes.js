@@ -36,7 +36,9 @@ FlowRouter.route("/", {
   action: function (params, queryParams) {
     mount(Layout, {
       content: function () {
-        return <ParkingAppData resourceId={Meteor.settings.public.parkingMetadata} /> ;
+        return <ParkingAppData
+                resourceId={Meteor.settings.public.parkingTableLatest}
+                options={{ sort: { ID: -1 }}}/> ;
       }
     });
   }
