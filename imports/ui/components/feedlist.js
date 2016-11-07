@@ -6,6 +6,7 @@ import Avatar from 'material-ui/Avatar';
 import FontIcon from "material-ui/FontIcon";
 import { darkBlack, blue900, blue100 } from 'material-ui/styles/colors';
 import * as _ from "lodash";
+import Infinite from 'react-infinite'
 
 const iconstyle = {margin: 5};
 
@@ -56,7 +57,9 @@ class FeedList extends React.Component {
         return (
             <List>
                 <Subheader>Live Feed</Subheader>
-                {list}
+                <Infinite containerHeight={500} elementHeight={50}>
+                    {list}
+                </Infinite>
             </List>);
     }
 }
