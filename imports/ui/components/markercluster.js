@@ -6,21 +6,17 @@ class MarkerCluster extends MapLayer {
     constructor(props) {
         super(props);
 
-        this._parkingMetadata = [];
+        //this._parkingMetadata = [];
         this._markers = {};    
     }
 
     componentWillMount() {
-        var markers = [];
-        var self = this;
+        let markers = [];
+        let self = this;
         this.leafletElement = L.markerClusterGroup();
         
-        if (!this._parkingMetadata.length && this.props.parkingMetadata.length) {
-            
-            this._parkingMetadata = this.props.parkingMetadata.slice(0);
-
-            _.forEach(this._parkingMetadata, (val) => {
-
+        if (!_.isEmpty(this.props.parkingMetadata)) {
+            markers = _.map(this.props.parkingMetadata, (val,key)=>{
                 this._markers[Number(val.LotCode)] = L.marker(new L.LatLng(val.Latitude, val.Longitude), {
                     title: val.Street,
                     icon: new L.TextIcon({
@@ -35,7 +31,7 @@ class MarkerCluster extends MapLayer {
                     "<b>Bay type: </b>"+val.BayType+"<br>"+
                     "<b>Tarrif code:</b>"+val.TariffCode+"<br>"+
                     "<b>Bay count:</b>"+val.BayCount).on('click', (e) => {self.props.onClickMarker(e.target.options.icon.options.id)});
-                markers.push(this._markers[Number(val.LotCode)]);
+                return this._markers[Number(val.LotCode)];
             });
 
             this.leafletElement.addLayers(markers);
@@ -60,7 +56,7 @@ class MarkerCluster extends MapLayer {
 }
 
 MarkerCluster.propTypes = {
-    parkingMetadata: React.PropTypes.array.isRequired,
+    parkingMetadata: React.PropTypes.object.isRequired,
     data: React.PropTypes.array.isRequired,
     onClickMarker: React.PropTypes.func.isRequired
 };

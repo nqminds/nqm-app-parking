@@ -26,7 +26,7 @@ class Livemap extends React.Component {
     }
 
     _setMapBounds(parkingMetadata) {
-        let bounds = L.latLngBounds(_.map(parkingMetadata, (val) => {
+        let bounds = L.latLngBounds(_.map(parkingMetadata, (val, key) => {
             return new L.LatLng(val.Latitude, val.Longitude);
         }));
 
@@ -37,43 +37,51 @@ class Livemap extends React.Component {
     }
 
     componentWillMount() {
-        if (this.props.parkingMetadata.length)
+        if (!_.isEmpty(this.props.parkingMetadata))
             this._setMapBounds(this.props.parkingMetadata);
     }
 
     componentWillReceiveProps(nextProps) {
-        //this.props.onSendFeedData(nextProps.data);
+        if (_.isEmpty(this.state.maxBounds) && !_.isEmpty(nextProps.parkingMetadata))
+            this._setMapBounds(nextProps.parkingMetadata);
     }
     
     render() {
-        var self = this;
+        let self = this;
+        let mapComponent = null, markerComponent = null;
 
-        return (
-            <Map
-                center={self.state.maxBounds.getCenter()}
-                zoom={18}
-                scrollWheelZoom={false}
-                touchZoom={false}
-                maxBounds={null}
-                dragging={true}
-            >
-                <TileLayer
-                    url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
-                    attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                />
-                <MarkerCluster
-                    parkingMetadata={self.props.parkingMetadata}
-                    data={self.props.data}
-                    onClickMarker={self.props.onClickMarker}
-                    onSendFeedData={self.props.onSendFeedData}
-                />
-            </Map>
-        );
+        if (!_.isEmpty(self.props.parkingMetadata)) {
+            markerComponent = <MarkerCluster
+                                parkingMetadata={self.props.parkingMetadata}
+                                data={self.props.data}
+                                onClickMarker={self.props.onClickMarker}
+                                onSendFeedData={self.props.onSendFeedData}
+                                />
+        }
+
+        if (self.state.maxBounds!=null) {
+            mapComponent = (<Map
+                    center={self.state.maxBounds.getCenter()}
+                    zoom={18}
+                    scrollWheelZoom={false}
+                    touchZoom={false}
+                    maxBounds={null}
+                    dragging={true}
+                    >
+                    <TileLayer
+                        url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
+                        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                    />
+                    {markerComponent}
+                </Map>);
+        }
+
+        return mapComponent;
     }
 }
 
 Livemap.propTypes = {
-    parkingMetadata: React.PropTypes.array.isRequired,
+    parkingMetadata: React.PropTypes.object.isRequired,
     data: React.PropTypes.array.isRequired,
     onClickMarker: React.PropTypes.func.isRequired,
     onSendFeedData: React.PropTypes.func.isRequired

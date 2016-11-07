@@ -367,7 +367,7 @@ class ParkingApp extends React.Component {
               <LivemapContainer
                 resourceId={Meteor.settings.public.parkingTableLatest}
                 options={mongodbOptions}
-                parkingMetadata={self.props.data}
+                parkingMetadata={this.state.parkingMetadata}
                 onClickMarker={self._onClickMarker.bind(this)}
                 onSendFeedData={self._onSendFeedData.bind(this)}
               />
