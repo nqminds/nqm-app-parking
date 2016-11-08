@@ -230,7 +230,7 @@ class ParkingApp extends React.Component {
     let lineChartVisibility, barChartVisibility;
     let toggleState = false;
 
-    let cPos = L.latLng(52.008778, -0.771088);
+    let cPos = L.latLng(0, 0);
 
     const appBarHeight = Meteor.settings.public.showAppBar !== false ? 50 : 0;
     const leftPanelWidth = 380;
@@ -350,7 +350,6 @@ class ParkingApp extends React.Component {
           </Card>);
     }
     
-    console.log(cPos);
     return (
         <div style={styles.root}>
           <div style={styles.leftPanel}>

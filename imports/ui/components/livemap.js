@@ -17,85 +17,54 @@ class Livemap extends React.Component {
         super(props);
 
         this.state = {
-            centerPosition: L.latLng(defaultData[0], defaultData[1])/*,
-            maxBounds: null*/
+            centerPosition: L.latLng(defaultData[0], defaultData[1])
         };
-
-        //this._data = [];
-        /*
-        this._setMapBounds = this._setMapBounds.bind(this);
-        */
     }
-
-    /*
-    _setMapBounds(parkingMetadata) {
-        let bounds = L.latLngBounds(_.map(parkingMetadata, (val, key) => {
-            return new L.LatLng(val.Latitude, val.Longitude);
-        }));
-
-        this.setState({
-            centerPosition: bounds.getCenter(),
-            maxBounds: bounds
-        });
-    }
-    */
 
     componentWillMount() {
         if (this.props.centerPosition!=null)
             this.setState({centerPosition: this.props.centerPosition});
-            
-        /*
-        if (!_.isEmpty(this.props.parkingMetadata))
-            this._setMapBounds(this.props.parkingMetadata);
-            */
     }
 
     componentWillReceiveProps(nextProps) {
-        /*
-        if (_.isEmpty(this.state.maxBounds) && !_.isEmpty(nextProps.parkingMetadata))
-            this._setMapBounds(nextProps.parkingMetadata);
-            */
         if (this.props.centerPosition!=null)
             this.setState({centerPosition: nextProps.centerPosition})
     }
     
     render() {
         let self = this;
-        let mapComponent = null, markerComponent = null;
+        let markerComponent = null;
 
         if (!_.isEmpty(self.props.parkingMetadata)) {
-            markerComponent = <MarkerCluster
-                                parkingMetadata={self.props.parkingMetadata}
-                                realTimeData={self.props.realTimeData}
-                                onClickMarker={self.props.onClickMarker}
-                                />
+            markerComponent =
+                <MarkerCluster
+                    parkingMetadata={self.props.parkingMetadata}
+                    realTimeData={self.props.realTimeData}
+                    onClickMarker={self.props.onClickMarker}
+                />
         }
 
-        console.log(this.state.centerPosition);
-        
-        if (self.state.maxBounds!=null) {
-            mapComponent = (<Map
-                    center={this.state.centerPosition}
-                    zoom={18}
-                    scrollWheelZoom={false}
-                    touchZoom={false}
-                    maxBounds={null}
-                    dragging={true}
-                    >
-                    <TileLayer
-                        url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
-                        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                    />
-                    {markerComponent}
-                </Map>);
-        }
 
-        return mapComponent;
+        return (
+            <Map
+                center={this.state.centerPosition}
+                zoom={18}
+                scrollWheelZoom={false}
+                touchZoom={false}
+                maxBounds={null}
+                dragging={true}
+            >
+                <TileLayer
+                    url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
+                    attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                />
+                {markerComponent}
+            </Map>);
     }
 }
 
 Livemap.propTypes = {
-        centerPosition: React.PropTypes.object.isRequired,
+    centerPosition: React.PropTypes.object.isRequired,
     parkingMetadata: React.PropTypes.object.isRequired,
     realTimeData: React.PropTypes.array.isRequired,
     onClickMarker: React.PropTypes.func.isRequired,
