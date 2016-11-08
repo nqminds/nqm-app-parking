@@ -290,12 +290,6 @@ class ParkingApp extends React.Component {
                 labelPosition="right"
                 onToggle={this.handleFeedSubscribeToggle.bind(this)}
                 label="Subscribe to live feed."
-              />            
-              <Toggle
-                toggled={this.state.smsToggleState}
-                labelPosition="right"
-                onToggle={this.handleSmsSubscribeToggle.bind(this)}
-                label="Subscribe to text message updates."
               />
             </CardText>
             <CardMedia
